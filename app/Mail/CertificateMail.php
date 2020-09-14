@@ -33,7 +33,6 @@ class CertificateMail extends Mailable
   {
     return $this->attachData($this->pdf->output(), 'CertificadoManipuladorDeAlimentos.pdf')
       ->attachData(file_get_contents($this->data['avatar']), $this->data['avatar']->getClientOriginalName())
-      ->attachData(file_get_contents($this->data['documentFile']), $this->data['documentFile']->getClientOriginalName())
       ->from('wordpress@manipulacionalimentos.co', 'Curso BPM - Carnet manipulación de alimentos')
       ->markdown('emails.certificate', ['data' => $this->data])
       ->subject('Curso BPM - Carnet manipulación de alimentos');

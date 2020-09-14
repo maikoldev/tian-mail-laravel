@@ -65,23 +65,7 @@
       </b-form-group>
 
       <b-form-group
-        label="Sube una foto o PDF de tu documento de identidad"
-        label-for="documentFile"
-      >
-        <b-form-file
-          accept=".jpg, .png, .jpeg, .pdf"
-          browse-text="Buscar"
-          drop-placeholder="Sueltalo"
-          id="documentFile"
-          placeholder="Seleccionar archivo"
-          v-model="$v.form.documentFile.$model"
-          :state="validateState('documentFile')"
-        />
-        <b-form-invalid-feedback>Este campo es requerido.</b-form-invalid-feedback>
-      </b-form-group>
-
-      <b-form-group
-        label="Sube una foto tuya (preferiblemente en fondo blanco) para poner en tu carnet"
+        label="Sube una foto tuya (preferiblemente en fondo blanco) para poner en tu carnet."
         label-for="avatar"
       >
         <b-form-file
@@ -93,6 +77,7 @@
           v-model="$v.form.avatar.$model"
           :state="validateState('avatar')"
         />
+        <small>Formatos admitidos ( .jpg, .png, .jpeg )</small>
         <b-form-invalid-feedback>Este campo es requerido.</b-form-invalid-feedback>
       </b-form-group>
 
@@ -117,6 +102,15 @@
         <span v-else>ENVIAR</span>
       </b-button>
     </b-form>
+
+    <!-- Avatar Errors -->
+    <b-alert
+      :show="avatarErrors.length > 0"
+      class="mt-4"
+      dismissible
+      fade
+      variant="danger"
+    >El campo "Foto" debe ser un archivo de tipo imagen: jpg, png, jpeg.</b-alert>
 
     <!-- Alert Error -->
     <b-alert
@@ -146,9 +140,9 @@ export default {
   mixins: [validationMixin],
   data() {
     return {
+      avatarErrors: [],
       form: {
         avatar: null,
-        documentFile: null,
         documentNumber: '',
         documentType: null,
         email: '',
@@ -173,9 +167,6 @@ export default {
   validations: {
     form: {
       avatar: {
-        required
-      },
-      documentFile: {
         required
       },
       documentNumber: {
@@ -212,6 +203,7 @@ export default {
 
       // Active Spinner
       this.isSending = true;
+      this.avatarErrors = [];
       this.showAlert = false;
       this.showError = false;
 
@@ -245,7 +237,14 @@ export default {
           this.showAlert = true;
         })
         .catch((error) => {
-          this.showError = true;
+          const errors = error.response.data.errors;
+          console.log(errors);
+          if (errors) {
+            this.avatarErrors = errors.avatar;
+          } else {
+            this.showError = true;
+          }
+
           this.uploadProgress = 0;
         })
         .finally(() => {
@@ -255,7 +254,6 @@ export default {
     resetForm() {
       this.form = {
         avatar: null,
-        documentFile: null,
         documentNumber: '',
         documentType: null,
         email: '',

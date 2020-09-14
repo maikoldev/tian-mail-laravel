@@ -28,6 +28,10 @@ class CertificateController extends Controller
    */
   public function store(Request $request)
   {
+    $request->validate([
+      'avatar' => 'required|image|mimes:jpg,png,jpeg',
+    ]);
+
     $date = Carbon::now()->locale('es');
     $dateObject = $date->toObject();
 
@@ -39,6 +43,8 @@ class CertificateController extends Controller
     $pdf = PDF::loadView('documents.certificate', compact('data'));
 
     $mailsTo = [$request->email, 'coordinador@tianips.com', 'carnet@manipulacionalimentos.co'];
+    // $mailsTo = [$request->email];
+
     Mail::to($mailsTo)->send(new CertificateMail($data, $pdf));
   }
 
