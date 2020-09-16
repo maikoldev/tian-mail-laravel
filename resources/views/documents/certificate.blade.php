@@ -197,7 +197,7 @@
 
   <section class="name text-center">
     <p><strong>Certifica que:</strong></p>
-    <p class="fullname text-blue">{{ strtoupper($data['fullname']) }} {{ strtoupper($data['lastname']) }}</p>
+    <p class="fullname text-blue">{{ mb_strtoupper($data['fullname']) }} {{ mb_strtoupper($data['lastname']) }}</p>
     <p class="document">con {{ $data['documentType'] }} No. <strong>{{ $data['documentNumber'] }}</strong></p>
   </section>
 
@@ -272,7 +272,7 @@
           <img class="background" src="images/carnet-front.jpeg" width="280">
           <img class="avatar" src="{{ $data['avatar'] }}">
           <div class="wrap">
-            <p class="name"><strong>{{ strtoupper($data['fullname']) }} {{ strtoupper($data['lastname']) }}</strong></p>
+            <p class="name"><strong>{{ mb_strtoupper($data['fullname']) }} {{ mb_strtoupper($data['lastname']) }}</strong></p>
             <p class="id field">{{ $data['documentNumber'] }}</p>
             <p class="valid field">{{ $data['certificateExpiration'] }}</p>
             <p class="serial field">{{ $data['certificateNumber'] }}</p>
