@@ -155,12 +155,12 @@ export default {
             avatarErrors: [],
             form: {
                 userType: this.userType,
-                fullname: 'Michael',
-                lastname: 'Garcia',
+                fullname: '',
+                lastname: '',
                 documentType: 'CC',
-                documentNumber: '1144200155',
-                phone: '3187378366',
-                email: 'me@maikoldev.com',
+                documentNumber: '',
+                phone: '',
+                email: '',
                 avatar: null
             },
             isSending: false,
