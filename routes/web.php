@@ -18,8 +18,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('clear-cache', function() {
-  Artisan::call('cache:clear');
+Route::get('clear-cache', function () {
+    Artisan::call('cache:clear');
 });
 
-Route::post('generate-certificate', 'CertificateController@store');
+Route::group(['prefix' => 'certificates'], function () {
+    Route::get('/', 'CertificateController@index');
+    Route::get('/all', 'CertificateController@allCertificates');
+    Route::get('validation', 'CertificateController@validationView');
+    Route::post('generate', 'CertificateController@store');
+    Route::post('validation/{id}', 'CertificateController@validation');
+    Route::post('resend/{id}', 'CertificateController@resend');
+});
