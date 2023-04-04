@@ -99,7 +99,7 @@ class CertificateController extends Controller
         $dateObject = $date->toObject();
         $dateTimestamp = $date->timestamp;
 
-        $certificate->certificate_number = rand(100000000000, 999999999999);
+        $certificate->certificate_number = sprintf('%012d', mt_rand(0, 999999999999));
         $certificate->certificate_date = Carbon::now()->format('Y-m-d H:i:s');
         $certificate->certificate_expiration_date = Carbon::now()->addYears(1)->format('Y-m-d H:i:s');
 
