@@ -70,7 +70,7 @@ export default {
         },
         resend(certificateId) {
             axios
-                .post(`/certificates/resend/${certificateId}`)
+                .post(`${process.env.MIX_APP_URL}/certificates/resend/${certificateId}`)
                 .then((response) => {
                     console.log(response);
                 })

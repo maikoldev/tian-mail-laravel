@@ -26,7 +26,7 @@ class CreateCertificatesTable extends Migration
             $table->string('certificate_number')->unique();
             $table->string('certificate_url');
             $table->timestamp('certificate_date');
-            $table->timestamp('certificate_expiration_date');
+            $table->timestamp('certificate_expiration_date')->nullable();
             $table->string('certificate_status');
             $table->timestamps();
         });

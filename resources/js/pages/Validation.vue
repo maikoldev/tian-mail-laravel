@@ -41,7 +41,7 @@
 export default {
     data() {
         return {
-            certificateId: '749457566218',
+            certificateId: '',
             data: null,
             errors: null
         };
@@ -52,7 +52,7 @@ export default {
             this.errors = null;
 
             axios
-                .post('/certificates/validation/', this.certificateId)
+                .post(`${process.env.MIX_APP_URL}/certificates/validation/`, this.certificateId)
                 .then((response) => {
                     this.data = response.data;
                     console.log(response);

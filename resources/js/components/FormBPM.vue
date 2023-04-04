@@ -249,9 +249,9 @@ export default {
 
             // Send Request
             axios
-                .post('/certificates/generate', params, config)
+                .post(`${process.env.MIX_APP_URL}/certificates/generate`, params, config)
                 .then((res) => {
-                    // this.resetForm();
+                    this.resetForm();
                     if (res.data.certificate) {
                         this.certificate = res.data.certificate;
                         this.showDuplicate = true;

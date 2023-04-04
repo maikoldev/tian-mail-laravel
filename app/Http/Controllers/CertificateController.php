@@ -35,8 +35,8 @@ class CertificateController extends Controller
                 }
             }
 
-            $certificate->certificate_date = Carbon::parse($certificate->certificate_date)->format('d-m-Y H:i A');
-            $certificate->certificate_expiration_date = Carbon::parse($certificate->certificate_expiration_date)->format('d-m-Y H:i A');
+            $certificate->certificate_date = Carbon::parse($certificate->certificate_date)->format('d-m-Y h:i A');
+            $certificate->certificate_expiration_date = Carbon::parse($certificate->certificate_expiration_date)->format('d-m-Y h:i A');
         });
 
         $certificates = $certificates->values()->all();
