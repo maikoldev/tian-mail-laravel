@@ -29,4 +29,5 @@ Route::group(['prefix' => 'certificates'], function () {
     Route::post('generate', 'CertificateController@store');
     Route::post('validation/{id}', 'CertificateController@validation');
     Route::post('resend/{id}', 'CertificateController@resend');
+    Route::post('approve/{id}', 'CertificateController@approve');
 });

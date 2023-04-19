@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Image;
 use Ramsey\Uuid\Uuid;
 
 class CertificateController extends Controller
@@ -84,19 +85,19 @@ class CertificateController extends Controller
         $uuid = Uuid::uuid4();
 
         // Save photo
-        $photo = $request->file('avatar');
-        $photoName = $uuid->toString() . '.' . $photo->getClientOriginalExtension();
-
         try {
-            $photo->storeAs('photos/', $photoName, 'public');
+            $photo = $request->file('avatar');
+            $photoName = $uuid->toString() . '.' . $photo->getClientOriginalExtension();
+            $photoResized = Image::make($photo)->fit(250, 300);
+            $photoResized->save(storage_path('app/public/photos/' . $photoName));
+
+            // Saving photo
+            $certificate->photo_url = '/storage/photos/' . $photoName;
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Error al guardar la foto.',
             ], 500);
         }
-
-        // Saving photo
-        $certificate->photo_url = '/storage/photos/' . $photoName;
 
         // Save certificate
         $date = Carbon::now()->locale('es');
@@ -218,6 +219,41 @@ class CertificateController extends Controller
                     'message' => 'El certificado ha sido reenviado.',
                 ], 200);
             } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'El certificado no se pudo enviar.',
+                ], 500);
+            }
+        } else {
+            return response()->json([
+                'message' => 'El certificado no existe.',
+            ], 404);
+        }
+    }
+
+    public function approve($certificateId)
+    {
+        $certificate = Certificate::where('certificate_number', $certificateId)->first();
+
+        if ($certificate) {
+            $data = $certificate->toArray();
+            $data['photo_name'] = explode('/', $certificate->photo_url)[3];
+            $data['pdf_name'] = explode('/', $certificate->certificate_url)[3];
+
+            $mailsTo = explode(',', env('OTHER_EMAILS'));
+
+            try {
+                Mail::to($certificate->email)
+                    ->cc($mailsTo)
+                    ->send(new CertificateMail($data));
+
+                $certificate->certificate_status = 'Sent';
+                $certificate->save();
+
+                return response()->json([
+                    'message' => 'El certificado ha sido aprobado y enviado.',
+                ], 200);
+            } catch (\Exception $e) {
+                dd($e->getMessage());
                 return response()->json([
                     'message' => 'El certificado no se pudo enviar.',
                 ], 500);

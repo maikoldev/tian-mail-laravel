@@ -31,7 +31,7 @@
                                 variant="success"
                                 size="sm"
                                 title="Aprobar y Enviar"
-                                @click="resend(row.item)"
+                                @click="approve(row.item)"
                             >
                                 <b-icon
                                     icon="envelope"
@@ -102,11 +102,6 @@ export default {
         async resend(item) {
             item.isRotating = true;
 
-            const msg =
-                item.certificate_status == 'Generated'
-                    ? 'El certificado ha sido enviado.'
-                    : 'El certificado ha sido reenviado.';
-
             await axios
                 .post(`${process.env.MIX_APP_URL}/certificates/resend/${item.certificate_number}`)
                 .then((response) => {
@@ -114,10 +109,40 @@ export default {
 
                     item.certificate_status = 'Sent';
 
-                    this.$bvToast.toast(msg, {
+                    this.$bvToast.toast('El certificado ha sido reenviado.', {
                         autoHideDelay: 2500,
                         solid: true,
                         title: 'Envío de certificado',
+                        variant: 'success'
+                    });
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+
+                    this.$bvToast.toast(error.response.data.message, {
+                        autoHideDelay: 2500,
+                        solid: true,
+                        title: 'Error',
+                        variant: 'danger'
+                    });
+                });
+
+            item.isRotating = false;
+        },
+        async approve(item) {
+            item.isRotating = true;
+
+            await axios
+                .post(`${process.env.MIX_APP_URL}/certificates/approve/${item.certificate_number}`)
+                .then((response) => {
+                    console.log(response);
+
+                    item.certificate_status = 'Sent';
+
+                    this.$bvToast.toast('El certificado ha sido enviado.', {
+                        autoHideDelay: 2500,
+                        solid: true,
+                        title: 'Aprobación de certificado',
                         variant: 'success'
                     });
                 })
