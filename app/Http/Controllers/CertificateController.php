@@ -90,7 +90,6 @@ class CertificateController extends Controller
         try {
             $photo->storeAs('photos/', $photoName, 'public');
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             return response()->json([
                 'message' => 'Error al guardar la foto.',
             ], 500);

@@ -14,17 +14,17 @@ class CertificatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'avatar' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            'avatar' => 'required|file|mimes:jpg,png,jpeg|max:2048',
         ];
     }
 
     public function messages()
     {
         return [
-            'avatar.required' => 'El campo imagen es obligatorio.',
-            'avatar.image' => 'El campo imagen debe ser una imagen.',
-            'avatar.mimes' => 'El campo imagen debe ser un archivo de tipo: jpg, png, jpeg.',
-            'avatar.max' => 'El campo imagen no debe ser mayor a 2MB.',
+            'avatar.required' => 'El campo Foto es obligatorio.',
+            'avatar.file' => 'El campo Foto debe ser un archivo.',
+            'avatar.mimes' => 'El campo Foto debe ser un archivo de tipo: jpg, png, jpeg.',
+            'avatar.max' => 'El campo Foto no debe ser mayor a 2MB.',
         ];
     }
 }
