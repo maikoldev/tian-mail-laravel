@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Certificate;
+use App\Http\Requests\CertificatePostRequest;
 use App\Mail\CertificateMail;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -35,8 +36,8 @@ class CertificateController extends Controller
                 }
             }
 
-            $certificate->certificate_date = Carbon::parse($certificate->certificate_date)->format('d-m-Y h:i A');
-            $certificate->certificate_expiration_date = Carbon::parse($certificate->certificate_expiration_date)->format('d-m-Y h:i A');
+            $certificate->certificate_date = Carbon::parse($certificate->certificate_date)->format('d/m/Y\\, h:i a');
+            $certificate->certificate_expiration_date = Carbon::parse($certificate->certificate_expiration_date)->format('d/m/Y\\, h:i a');
         });
 
         $certificates = $certificates->values()->all();
@@ -55,7 +56,7 @@ class CertificateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CertificatePostRequest $request)
     {
         $userCertificate = Certificate::where('document_number', $request->documentNumber)->first();
 
@@ -67,10 +68,6 @@ class CertificateController extends Controller
                 ], 200);
             }
         }
-
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpg,png,jpeg',
-        ]);
 
         $certificate = new Certificate([
             'user_type' => $request->userType,
@@ -89,7 +86,15 @@ class CertificateController extends Controller
         // Save photo
         $photo = $request->file('avatar');
         $photoName = $uuid->toString() . '.' . $photo->getClientOriginalExtension();
-        $photo->storeAs('photos', $photoName, 'public');
+
+        try {
+            $photo->storeAs('photos/', $photoName, 'public');
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+            return response()->json([
+                'message' => 'Error al guardar la foto.',
+            ], 500);
+        }
 
         // Saving photo
         $certificate->photo_url = '/storage/photos/' . $photoName;
@@ -100,8 +105,8 @@ class CertificateController extends Controller
         $dateTimestamp = $date->timestamp;
 
         $certificate->certificate_number = sprintf('%012d', mt_rand(0, 999999999999));
-        $certificate->certificate_date = Carbon::now()->format('Y-m-d H:i:s');
-        $certificate->certificate_expiration_date = Carbon::now()->addYears(1)->format('Y-m-d H:i:s');
+        $certificate->certificate_date = Carbon::now();
+        $certificate->certificate_expiration_date = Carbon::now()->addYears(1);
 
         $pdfName = $uuid->toString() . '.pdf';
 
@@ -206,6 +211,10 @@ class CertificateController extends Controller
 
             try {
                 Mail::to($certificate->email)->send(new CertificateMail($data));
+
+                $certificate->certificate_status = 'Sent';
+                $certificate->save();
+
                 return response()->json([
                     'message' => 'El certificado ha sido reenviado.',
                 ], 200);

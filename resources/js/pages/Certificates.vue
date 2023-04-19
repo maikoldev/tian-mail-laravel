@@ -1,7 +1,7 @@
 <template>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-11">
                 <h1 class="h2 mb-3">Certificados</h1>
                 <b-table striped responsive hover :items="items" :fields="fields">
                     <template #cell(certificate_status)="row">
@@ -16,23 +16,41 @@
                         </b-badge>
                     </template>
                     <template #cell(actions)="row">
-                        <b-button
-                            variant="info"
-                            size="sm"
-                            :href="row.item.certificate_url"
-                            download
-                            title="Descargar"
-                        >
-                            <b-icon icon="download"></b-icon>
-                        </b-button>
-                        <b-button
-                            variant="success"
-                            size="sm"
-                            title="Reenviar"
-                            @click="resend(row.item.certificate_number)"
-                        >
-                            <b-icon icon="arrow-repeat"></b-icon>
-                        </b-button>
+                        <div class="d-flex gap">
+                            <b-button
+                                variant="info"
+                                size="sm"
+                                :href="row.item.certificate_url"
+                                download
+                                title="Descargar"
+                            >
+                                <b-icon icon="download"></b-icon>
+                            </b-button>
+                            <b-button
+                                v-if="row.item.certificate_status == 'Generated'"
+                                variant="success"
+                                size="sm"
+                                title="Aprobar y Enviar"
+                                @click="resend(row.item)"
+                            >
+                                <b-icon
+                                    icon="envelope"
+                                    :animation="row.item.isRotating ? 'throb' : 'none'"
+                                ></b-icon>
+                            </b-button>
+                            <b-button
+                                v-if="row.item.certificate_status == 'Sent'"
+                                variant="success"
+                                size="sm"
+                                title="Reenviar"
+                                @click="resend(row.item)"
+                            >
+                                <b-icon
+                                    icon="arrow-repeat"
+                                    :animation="row.item.isRotating ? 'spin' : 'none'"
+                                ></b-icon>
+                            </b-button>
+                        </div>
                     </template>
                 </b-table>
             </div>
@@ -62,25 +80,66 @@ export default {
             ]
         };
     },
+    mounted() {
+        this.getCertificates();
+    },
     methods: {
         getCertificates() {
-            axios.get('/certificates/all').then((response) => {
-                this.items = response.data;
-            });
-        },
-        resend(certificateId) {
             axios
-                .post(`${process.env.MIX_APP_URL}/certificates/resend/${certificateId}`)
+                .get('/certificates/all')
                 .then((response) => {
-                    console.log(response);
+                    this.items = response.data.map((item) => {
+                        return {
+                            ...item,
+                            isRotating: false
+                        };
+                    });
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+        resend(item) {
+            item.isRotating = true;
+
+            const msg =
+                item.certificate_status == 'Generated'
+                    ? 'El certificado ha sido enviado.'
+                    : 'El certificado ha sido reenviado.';
+
+            axios
+                .post(`${process.env.MIX_APP_URL}/certificates/resend/${item.certificate_number}`)
+                .then((response) => {
+                    console.log(response);
+
+                    item.certificate_status = 'Sent';
+
+                    this.$bvToast.toast(msg, {
+                        autoHideDelay: 2500,
+                        solid: true,
+                        title: 'Envío de certificado',
+                        variant: 'success'
+                    });
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+
+                    this.$bvToast.toast(error.response.data.message, {
+                        autoHideDelay: 2500,
+                        solid: true,
+                        title: 'Error',
+                        variant: 'danger'
+                    });
+                });
+
+            item.isRotating = false;
         }
-    },
-    mounted() {
-        this.getCertificates();
     }
 };
 </script>
+
+<style scoped>
+.gap {
+    gap: 0.5rem;
+}
+</style>

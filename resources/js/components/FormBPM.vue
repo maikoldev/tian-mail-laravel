@@ -81,7 +81,7 @@
                     v-model="$v.form.avatar.$model"
                     :state="validateState('avatar')"
                 />
-                <small>Formatos admitidos ( .jpg, .png, .jpeg )</small>
+                <small>Formatos admitidos ( .jpg, .png, .jpeg ) | Tamaño máximo 2MB</small>
                 <b-form-invalid-feedback>Este campo es requerido.</b-form-invalid-feedback>
             </b-form-group>
 
@@ -108,9 +108,19 @@
         </b-form>
 
         <!-- Avatar Errors -->
-        <b-alert :show="avatarErrors.length > 0" class="mt-4" dismissible fade variant="danger">
-            El campo "Foto" debe ser un archivo de tipo imagen: jpg, png, jpeg.
-        </b-alert>
+        <template v-if="avatarErrors.length > 0">
+            <b-alert
+                v-for="(error, index) in avatarErrors"
+                :key="index"
+                :show="true"
+                class="mt-4"
+                dismissible
+                fade
+                variant="danger"
+            >
+                {{ error }}
+            </b-alert>
+        </template>
 
         <!-- Alert Error -->
         <b-alert :show="showError" class="mt-4" dismissible fade variant="danger">
