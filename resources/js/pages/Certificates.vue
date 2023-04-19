@@ -99,7 +99,7 @@ export default {
                     console.log(error);
                 });
         },
-        resend(item) {
+        async resend(item) {
             item.isRotating = true;
 
             const msg =
@@ -107,7 +107,7 @@ export default {
                     ? 'El certificado ha sido enviado.'
                     : 'El certificado ha sido reenviado.';
 
-            axios
+            await axios
                 .post(`${process.env.MIX_APP_URL}/certificates/resend/${item.certificate_number}`)
                 .then((response) => {
                     console.log(response);
