@@ -172,9 +172,13 @@ class CertificateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Certificate $certificate)
     {
-        //
+        $certificate->delete();
+
+        return response()->json([
+            'message' => 'El certificado ha sido eliminado.',
+        ], 200);
     }
 
     public function validation($certificateId)

@@ -50,6 +50,17 @@
                                     :animation="row.item.isRotating ? 'spin' : 'none'"
                                 ></b-icon>
                             </b-button>
+                            <b-button
+                                variant="danger"
+                                size="sm"
+                                title="Eliminar"
+                                @click="destroy(row.item)"
+                            >
+                                <b-icon
+                                    icon="trash"
+                                    :animation="row.item.isRotating ? 'throb' : 'none'"
+                                ></b-icon>
+                            </b-button>
                         </div>
                     </template>
                 </b-table>
@@ -143,6 +154,36 @@ export default {
                         autoHideDelay: 2500,
                         solid: true,
                         title: 'Aprobación de certificado',
+                        variant: 'success'
+                    });
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+
+                    this.$bvToast.toast(error.response.data.message, {
+                        autoHideDelay: 2500,
+                        solid: true,
+                        title: 'Error',
+                        variant: 'danger'
+                    });
+                });
+
+            item.isRotating = false;
+        },
+        async destroy(item) {
+            item.isRotating = true;
+
+            await axios
+                .delete(`${process.env.MIX_APP_URL}/certificates/delete/${item.id}`)
+                .then((response) => {
+                    console.log(response);
+
+                    this.items = this.items.filter((i) => i.id !== item.id);
+
+                    this.$bvToast.toast('El certificado ha sido eliminado.', {
+                        autoHideDelay: 2500,
+                        solid: true,
+                        title: 'Eliminación de certificado',
                         variant: 'success'
                     });
                 })

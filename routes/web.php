@@ -30,4 +30,5 @@ Route::group(['prefix' => 'certificates'], function () {
     Route::post('validation/{id}', 'CertificateController@validation');
     Route::post('resend/{id}', 'CertificateController@resend');
     Route::post('approve/{id}', 'CertificateController@approve');
+    Route::delete('delete/{certificate}', 'CertificateController@destroy');
 });
