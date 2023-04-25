@@ -4,7 +4,10 @@
             <div class="col-6">
                 <h1 class="h2 mb-3">Validar mi Certificación</h1>
                 <b-form @submit.prevent="onSubmit">
-                    <b-form-group label="Número del certificado" label-for="certificate-id">
+                    <b-form-group
+                        label="Número del certificado o Cedula"
+                        label-for="certificate-id"
+                    >
                         <b-form-input
                             id="certificate-id"
                             v-model="certificateId"
@@ -19,7 +22,11 @@
 
                 <!-- Alert  -->
                 <b-alert :show="data ? true : false" class="mt-4" dismissible fade variant="info">
-                    <p class="mb-0">{{ data?.message || '-' }}</p>
+                    <p class="mb-0">
+                        {{ data?.message || '-' }} <br />
+                        Su numero de certificado es:
+                        {{ data?.certificate.certificate_number || '-' }}
+                    </p>
                 </b-alert>
 
                 <!-- Alert Errors -->
@@ -55,7 +62,6 @@ export default {
                 .post(`${process.env.MIX_APP_URL}/certificates/validation/${this.certificateId}`)
                 .then((response) => {
                     this.data = response.data;
-                    console.log(response);
                 })
                 .catch((error) => {
                     this.errors = error.response.data;

@@ -183,7 +183,7 @@ class CertificateController extends Controller
 
     public function validation($certificateId)
     {
-        $certificate = Certificate::where('certificate_number', $certificateId)->first();
+        $certificate = Certificate::where('certificate_number', $certificateId)->orWhere('document_number', $certificateId)->first();
 
         if ($certificate) {
             if ($certificate->certificate_expiration_date > Carbon::now()) {
