@@ -1,10 +1,10 @@
 # Tian Mail Laravel
 
-Guia basica para instalar, ejecutar y desplegar este proyecto (Laravel 9).
+Guia basica para instalar, ejecutar y desplegar este proyecto (Laravel 11).
 
 ## Requisitos minimos
 
-- PHP `>= 8.0.2` (recomendado: `8.3.x`)
+- PHP `>= 8.2` (recomendado: `8.3.x`)
 - Composer `>= 2.x`
 - Base de datos MySQL/MariaDB
 - Node.js `16.x` (solo si vas a compilar frontend)
@@ -35,6 +35,8 @@ DB_USERNAME=tu_user
 DB_PASSWORD=tu_pass
 
 FILESYSTEM_DISK=local
+APP_TIMEZONE=UTC
+MIX_APP_URL="${APP_URL}"
 ```
 
 Luego ejecuta:
@@ -50,9 +52,11 @@ Este proyecto usa Laravel Mix (Webpack).
 
 ```bash
 pnpm install
-pnpm run dev
+pnpm run watch
 pnpm run prod
 ```
+
+`pnpm run watch` recompila automaticamente cuando cambian archivos en `resources/`.
 
 Archivos generados principales:
 
@@ -96,6 +100,7 @@ Si usas colas o cache adicional, agrega los comandos correspondientes (`queue:wo
 ```bash
 php artisan --version
 php artisan route:list
+php artisan test
 ```
 
-Si ambos comandos responden, la aplicacion esta levantando correctamente.
+Si los comandos responden sin errores, la aplicacion esta levantando correctamente.

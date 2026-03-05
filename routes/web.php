@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
-use \Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +24,12 @@ Route::get('clear-cache', function () {
 });
 
 Route::group(['prefix' => 'certificates'], function () {
-    Route::get('/', 'CertificateController@index');
-    Route::get('/all', 'CertificateController@allCertificates');
-    Route::get('validation', 'CertificateController@validationView');
-    Route::post('generate', 'CertificateController@store');
-    Route::post('validation/{id}', 'CertificateController@validation');
-    Route::post('resend/{id}', 'CertificateController@resend');
-    Route::post('approve/{id}', 'CertificateController@approve');
-    Route::delete('delete/{certificate}', 'CertificateController@destroy');
+    Route::get('/', [CertificateController::class, 'index']);
+    Route::get('/all', [CertificateController::class, 'allCertificates']);
+    Route::get('validation', [CertificateController::class, 'validationView']);
+    Route::post('generate', [CertificateController::class, 'store']);
+    Route::post('validation/{id}', [CertificateController::class, 'validation']);
+    Route::post('resend/{id}', [CertificateController::class, 'resend']);
+    Route::post('approve/{id}', [CertificateController::class, 'approve']);
+    Route::delete('delete/{certificate}', [CertificateController::class, 'destroy']);
 });
