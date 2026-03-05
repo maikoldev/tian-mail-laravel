@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Certificate;
 use App\Http\Requests\CertificatePostRequest;
 use App\Mail\CertificateMail;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -181,9 +181,9 @@ class CertificateController extends Controller
         ], 200);
     }
 
-    public function validation($certificateId)
+    public function validation($id)
     {
-        $certificate = Certificate::where('certificate_number', $certificateId)->orWhere('document_number', $certificateId)->first();
+        $certificate = Certificate::where('certificate_number', $id)->orWhere('document_number', $id)->first();
 
         if ($certificate) {
             if ($certificate->certificate_expiration_date > Carbon::now()) {
@@ -204,9 +204,9 @@ class CertificateController extends Controller
         }
     }
 
-    public function resend($certificateId)
+    public function resend($id)
     {
-        $certificate = Certificate::where('certificate_number', $certificateId)->first();
+        $certificate = Certificate::where('certificate_number', $id)->first();
 
         if ($certificate) {
             $data = $certificate->toArray();
@@ -234,9 +234,9 @@ class CertificateController extends Controller
         }
     }
 
-    public function approve($certificateId)
+    public function approve($id)
     {
-        $certificate = Certificate::where('certificate_number', $certificateId)->first();
+        $certificate = Certificate::where('certificate_number', $id)->first();
 
         if ($certificate) {
             $data = $certificate->toArray();
