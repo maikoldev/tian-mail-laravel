@@ -1,19 +1,18 @@
 /node_modules
+/public/build
 /public/hot
 /public/storage
-# /public/css
-# /public/js
 /storage/*.key
 /vendor
 .env
 .env.backup
-.idea
+.env.production
 .phpunit.result.cache
-composer.lock
 Homestead.json
 Homestead.yaml
+auth.json
 npm-debug.log
-package-lock.json
-README.md
 yarn-error.log
-yarn.lock
+/.fleet
+/.idea
+/.vscode
