@@ -1,6 +1,6 @@
 # Tian Mail Laravel
 
-Guia basica para instalar, ejecutar y desplegar este proyecto (Laravel 11).
+Guia basica para instalar, ejecutar y desplegar este proyecto (Laravel 12).
 
 ## Requisitos minimos
 
