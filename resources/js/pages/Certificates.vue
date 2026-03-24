@@ -114,7 +114,7 @@ export default {
             item.isRotating = true;
 
             await axios
-                .post(`${process.env.MIX_APP_URL}/certificates/resend/${item.certificate_number}`)
+                .post(`/certificates/resend/${item.certificate_number}`)
                 .then((response) => {
                     console.log(response);
 
@@ -144,7 +144,7 @@ export default {
             item.isRotating = true;
 
             await axios
-                .post(`${process.env.MIX_APP_URL}/certificates/approve/${item.certificate_number}`)
+                .post(`/certificates/approve/${item.certificate_number}`)
                 .then((response) => {
                     console.log(response);
 
@@ -174,7 +174,7 @@ export default {
             item.isRotating = true;
 
             await axios
-                .delete(`${process.env.MIX_APP_URL}/certificates/delete/${item.id}`)
+                .delete(`/certificates/delete/${item.id}`)
                 .then((response) => {
                     console.log(response);
 

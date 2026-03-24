@@ -35,7 +35,7 @@ DB_USERNAME=tu_user
 DB_PASSWORD=tu_pass
 
 FILESYSTEM_DISK=local
-MIX_APP_URL="${APP_URL}"
+MIX_API_BASE_URL="${APP_URL}"
 ```
 
 Luego ejecuta:

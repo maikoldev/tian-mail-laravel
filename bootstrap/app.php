@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Middleware\CheckForMaintenanceMode;
-use App\Http\Middleware\CorsMiddleware;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             TrustProxies::class,
             CheckForMaintenanceMode::class,
             TrimStrings::class,
-            CorsMiddleware::class,
+            HandleCors::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

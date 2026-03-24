@@ -259,7 +259,7 @@ export default {
 
             // Send Request
             axios
-                .post(`${process.env.MIX_APP_URL}/certificates/generate`, params, config)
+                .post('/certificates/generate', params, config)
                 .then((res) => {
                     this.resetForm();
                     if (res.data.certificate) {
