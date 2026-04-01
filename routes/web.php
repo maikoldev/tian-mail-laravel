@@ -27,8 +27,8 @@ Route::group(['prefix' => 'certificates'], function () {
     Route::get('/', [CertificateController::class, 'index']);
     Route::get('/all', [CertificateController::class, 'allCertificates']);
     Route::get('validation', [CertificateController::class, 'validationView']);
+    Route::get('validation/{id}', [CertificateController::class, 'validation']);
     Route::post('generate', [CertificateController::class, 'store']);
-    Route::post('validation/{id}', [CertificateController::class, 'validation']);
     Route::post('resend/{id}', [CertificateController::class, 'resend']);
     Route::post('approve/{id}', [CertificateController::class, 'approve']);
     Route::delete('delete/{certificate}', [CertificateController::class, 'destroy']);

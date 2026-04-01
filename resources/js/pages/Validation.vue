@@ -1,73 +1,66 @@
 <template>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-6">
-                <h1 class="h2 mb-3">Validar mi Certificación</h1>
-                <b-form @submit.prevent="onSubmit">
-                    <b-form-group
-                        label="Número del certificado o Cedula"
-                        label-for="certificate-id"
-                    >
-                        <b-form-input
-                            id="certificate-id"
-                            v-model="certificateId"
-                            type="number"
-                            placeholder="000123456789"
-                            required
-                        ></b-form-input>
-                    </b-form-group>
+    <section class="mx-auto mt-8 max-w-2xl px-4 sm:px-6 lg:px-8">
+        <div class="card-surface">
+            <h1 class="mb-4 text-2xl font-bold text-slate-900">Validar mi certificación</h1>
+            <form class="space-y-4" @submit.prevent="onSubmit">
+                <div>
+                    <label class="form-label" for="certificate-id">
+                        Número del certificado o cédula
+                    </label>
+                    <input
+                        id="certificate-id"
+                        v-model="certificateId"
+                        class="form-control"
+                        placeholder="000123456789"
+                        required
+                        inputmode="numeric"
+                        type="text"
+                    />
+                </div>
 
-                    <b-button type="submit" variant="info">Validar</b-button>
-                </b-form>
+                <button class="btn btn-action" type="submit">
+                    Validar
+                </button>
+            </form>
 
-                <!-- Alert  -->
-                <b-alert :show="data ? true : false" class="mt-4" dismissible fade variant="info">
-                    <p class="mb-0">
-                        {{ data?.message || '-' }} <br />
-                        Su numero de certificado es:
-                        {{ data?.certificate.certificate_number || '-' }}
-                    </p>
-                </b-alert>
+            <div v-if="data" class="mt-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700">
+                <p>
+                    {{ data?.message || '-' }}
+                    <br />
+                    Su número de certificado es: {{ data?.certificate?.certificate_number || '-' }}
+                </p>
+            </div>
 
-                <!-- Alert Errors -->
-                <b-alert
-                    :show="errors ? true : false"
-                    class="mt-4"
-                    dismissible
-                    fade
-                    variant="warning"
-                >
-                    <p class="mb-0">{{ errors?.message || '-' }}</p>
-                </b-alert>
+            <div v-if="errors" class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                <p>{{ errors?.message || '-' }}</p>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            certificateId: '',
-            data: null,
-            errors: null
-        };
-    },
-    methods: {
-        onSubmit() {
-            this.data = null;
-            this.errors = null;
+<script setup>
+import { ref } from 'vue';
 
-            axios
-                .post(`/certificates/validation/${this.certificateId}`)
-                .then((response) => {
-                    this.data = response.data;
-                })
-                .catch((error) => {
-                    this.errors = error.response.data;
-                    console.log(error);
-                });
-        }
+const certificateId = ref('');
+const data = ref(null);
+const errors = ref(null);
+
+const onSubmit = async () => {
+    data.value = null;
+    errors.value = null;
+
+    const id = String(certificateId.value || '').trim();
+
+    if (!id) {
+        errors.value = { message: 'Ingresa un número de certificado o cédula válido.' };
+        return;
+    }
+
+    try {
+        const response = await axios.get(`/certificates/validation/${encodeURIComponent(id)}`);
+        data.value = response.data;
+    } catch (error) {
+        errors.value = error?.response?.data || { message: 'No fue posible validar el certificado.' };
     }
 };
 </script>

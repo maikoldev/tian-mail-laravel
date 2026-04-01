@@ -1,31 +1,21 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production webpack --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^0.19",
-        "cross-env": "^7.0",
-        "laravel-mix": "^5.0.1",
-        "lodash": "^4.17.19",
-        "resolve-url-loader": "^3.1.0",
-        "sass": "^1.15.2",
-        "sass-loader": "^8.0.0",
-        "vue-template-compiler": "^2.6.11",
-        "webpack": "4.47.0",
-        "webpack-cli": "3.3.12",
-        "webpack-dev-server": "3.11.3"
+        "@tailwindcss/forms": "^0.5.10",
+        "@tailwindcss/vite": "^4.1.4",
+        "@vitejs/plugin-vue": "^5.2.4",
+        "laravel-vite-plugin": "^1.2.0",
+        "tailwindcss": "^4.1.4",
+        "vite": "^5.4.19"
     },
     "dependencies": {
-        "bootstrap": "^4.5.0",
-        "bootstrap-vue": "^2.15.0",
-        "vue": "^2.6.11",
-        "vuelidate": "^0.7.5"
+        "@tabler/icons-vue": "^3.41.1",
+        "axios": "^1.11.0",
+        "lodash": "^4.17.21",
+        "vue": "^3.5.18"
     }
 }

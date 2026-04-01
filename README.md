@@ -35,7 +35,7 @@ DB_USERNAME=tu_user
 DB_PASSWORD=tu_pass
 
 FILESYSTEM_DISK=local
-MIX_API_BASE_URL="${APP_URL}"
+VITE_API_BASE_URL="${APP_URL}"
 ```
 
 Luego ejecuta:
@@ -45,24 +45,20 @@ php artisan migrate
 php artisan serve
 ```
 
-## Frontend (solo para compilar assets)
-
-Este proyecto usa Laravel Mix (Webpack).
+## Frontend (Vue 3 + Vite + Tailwind)
 
 ```bash
 pnpm install
-pnpm run watch
-pnpm run prod
+pnpm run dev
+pnpm run build
 ```
 
-`pnpm run watch` recompila automaticamente cuando cambian archivos en `resources/`.
+`pnpm run dev` levanta el servidor de Vite y recompila automaticamente.
 
 Archivos generados principales:
 
-- `public/js/app.js`
-- `public/js/app.js.LICENSE.txt`
-- `public/css/app.css`
-- `public/mix-manifest.json`
+- `public/build/manifest.json`
+- `public/build/assets/*`
 
 ## Despliegue rapido (subiendo assets compilados)
 
@@ -72,17 +68,15 @@ Si en produccion subes assets ya compilados, NO necesitas Node/pnpm en el servid
 
 ```bash
 pnpm install
-pnpm run prod
+pnpm run build
 ```
 
 ### Paso 2: subir al servidor
 
 Sube el codigo y asegurate de incluir:
 
-- `public/js/app.js`
-- `public/js/app.js.LICENSE.txt`
-- `public/css/app.css`
-- `public/mix-manifest.json`
+- `public/build/manifest.json`
+- `public/build/assets/*`
 
 ### Paso 3: instalar dependencias PHP en servidor
 

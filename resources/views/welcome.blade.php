@@ -1,13 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div id="app">
-                    <form-bpm user-type="Particular"></form-bpm>
-                </div>
-            </div>
-        </div>
+    <div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+        <form-bpm user-type="Particular"></form-bpm>
     </div>
 @endsection

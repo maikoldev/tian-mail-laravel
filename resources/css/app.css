@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.js';
+
+@layer base {
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased;
+    }
+
+    button:not(:disabled),
+    [role='button']:not([aria-disabled='true']) {
+        @apply cursor-pointer;
+    }
+}
+
+@layer components {
+    .card-surface {
+        @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm;
+    }
+
+    .btn {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-xl border px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-70;
+    }
+
+    .btn-sm {
+        @apply rounded-lg px-2 py-1.5 text-xs font-semibold;
+    }
+
+    .btn-outline {
+        @apply border-slate-300 text-slate-700 hover:bg-slate-50;
+    }
+
+    .btn-action {
+        @apply border-action-500 bg-action-500 text-white hover:bg-action-600;
+    }
+
+    .btn-brand-soft {
+        @apply border-secondary-500 bg-secondary-500 text-white hover:bg-secondary-600;
+    }
+
+    .btn-success-soft {
+        @apply border-action-500 bg-action-500 text-white hover:bg-action-600;
+    }
+
+    .btn-teal-soft {
+        @apply border-primary-700 bg-primary-700 text-white hover:bg-primary-800;
+    }
+
+    .btn-danger-soft {
+        @apply border-red-500 bg-red-500 text-white hover:bg-red-600;
+    }
+
+    .table-wrap {
+        @apply overflow-x-auto;
+    }
+
+    .table {
+        @apply min-w-full text-sm;
+    }
+
+    .table thead {
+        @apply bg-slate-100 text-left text-slate-600;
+    }
+
+    .table th {
+        @apply px-4 py-3 font-semibold;
+    }
+
+    .table td {
+        @apply px-4 py-3;
+    }
+
+    .table tbody tr {
+        @apply border-t border-slate-100 bg-white;
+    }
+
+    .table-striped tbody tr:nth-child(even) {
+        @apply bg-slate-50;
+    }
+
+    .table-hover tbody tr:hover {
+        @apply bg-slate-100;
+    }
+
+    .badge {
+        @apply inline-flex rounded-full px-3 py-1 text-xs font-semibold;
+    }
+
+    .badge-info {
+        @apply border border-secondary-500 bg-secondary-500 text-white;
+    }
+
+    .badge-success {
+        @apply border border-action-500 bg-action-500 text-white;
+    }
+
+    .badge-danger {
+        @apply border border-red-500 bg-red-500 text-white;
+    }
+
+    .form-label {
+        @apply mb-2 block text-sm font-medium text-slate-700;
+    }
+
+    .form-control {
+        @apply block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/25 focus:outline-none;
+    }
+
+    .form-control-file {
+        @apply block w-full cursor-pointer rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-action-500 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-action-600;
+    }
+
+    .form-help {
+        @apply mt-1 block text-xs text-slate-500;
+    }
+
+    .form-error {
+        @apply mt-1 text-sm text-red-600;
+    }
+}

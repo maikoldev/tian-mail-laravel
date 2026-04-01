@@ -1,18 +1,14 @@
-require('./bootstrap');
+import './bootstrap';
 
-import Vue from 'vue';
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
+import { createApp } from 'vue';
+import FormBPM from './components/FormBPM.vue';
+import PageCertificates from './pages/Certificates.vue';
+import PageValidation from './pages/Validation.vue';
 
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+const app = createApp({});
 
-// Formulario BPM
-Vue.component('form-bpm', require('./components/FormBPM').default);
+app.component('form-bpm', FormBPM);
+app.component('page-certificates', PageCertificates);
+app.component('page-validation', PageValidation);
 
-// Pages
-Vue.component('page-certificates', require('./pages/Certificates').default);
-Vue.component('page-validation', require('./pages/Validation').default);
-
-new Vue({
-    el: '#app'
-});
+app.mount('#app');

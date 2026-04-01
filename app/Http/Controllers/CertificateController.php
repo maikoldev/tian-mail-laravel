@@ -25,11 +25,16 @@ class CertificateController extends Controller
         return view('certificates');
     }
 
-    public function allCertificates()
+    public function allCertificates(Request $request)
     {
-        $certificates = Certificate::all()->sortByDesc('id');
+        $perPage = (int) $request->input('per_page', 10);
+        $perPage = max(1, min($perPage, 50));
 
-        $certificates->map(function ($certificate) {
+        $certificates = Certificate::query()
+            ->orderByDesc('id')
+            ->paginate($perPage);
+
+        $certificates->getCollection()->transform(function ($certificate) {
             if ($certificate->certificate_status != 'Expired') {
                 if ($certificate->certificate_expiration_date < Carbon::now()) {
                     $certificate->certificate_status = 'Expired';
@@ -39,9 +44,9 @@ class CertificateController extends Controller
 
             $certificate->certificate_date = Carbon::parse($certificate->certificate_date)->format('d/m/Y\\, h:i a');
             $certificate->certificate_expiration_date = Carbon::parse($certificate->certificate_expiration_date)->format('d/m/Y\\, h:i a');
-        });
 
-        $certificates = $certificates->values()->all();
+            return $certificate;
+        });
 
         return $certificates;
     }
