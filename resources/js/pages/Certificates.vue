@@ -25,6 +25,60 @@
                 {{ notice.message }}
             </div>
 
+            <div class="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                <div class="w-full lg:max-w-2xl lg:flex-1">
+                    <label class="form-label" for="certificate-search">Buscar</label>
+                    <div class="relative">
+                        <input
+                            id="certificate-search"
+                            v-model.trim="searchTerm"
+                            type="text"
+                            class="form-control pr-10"
+                            placeholder="Cédula, nombre, apellido o número de certificado"
+                        />
+                        <button
+                            v-if="searchTerm"
+                            type="button"
+                            class="absolute right-2 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+                            title="Limpiar búsqueda"
+                            aria-label="Limpiar búsqueda"
+                            @click="searchTerm = ''"
+                        >
+                            <IconX class="h-4 w-4" aria-hidden="true" />
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:shrink-0">
+                    <div>
+                        <label class="form-label" for="certificate-status">Estado</label>
+                        <select
+                            id="certificate-status"
+                            v-model="statusFilter"
+                            class="form-control w-full py-2 sm:w-44"
+                        >
+                            <option value="">Todos</option>
+                            <option value="Generated">Generado</option>
+                            <option value="Sent">Enviado</option>
+                            <option value="Expired">Vencido</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label" for="certificate-user-type">Tipo de usuario</label>
+                        <select
+                            id="certificate-user-type"
+                            v-model="userTypeFilter"
+                            class="form-control w-full py-2 sm:w-44"
+                        >
+                            <option value="">Todos</option>
+                            <option value="Particular">Particular</option>
+                            <option value="Empresa">Empresa</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="table-wrap">
                 <table class="table table-striped table-hover">
                     <thead>
@@ -175,7 +229,8 @@
 </template>
 
 <script setup>
-import { IconDownload, IconMail, IconRefresh, IconTrash } from '@tabler/icons-vue';
+import { IconDownload, IconMail, IconRefresh, IconTrash, IconX } from '@tabler/icons-vue';
+import { refDebounced } from '@vueuse/core';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 
 const items = ref([]);
@@ -185,6 +240,10 @@ const perPage = ref(10);
 const perPageOptions = [5, 10, 25, 50];
 const totalItems = ref(0);
 const totalPages = ref(1);
+const searchTerm = ref('');
+const searchTermDebounced = refDebounced(searchTerm, 350);
+const statusFilter = ref('');
+const userTypeFilter = ref('');
 const notice = reactive({
     message: '',
     success: true
@@ -260,7 +319,10 @@ const getCertificates = async (page = currentPage.value) => {
         const response = await axios.get('/certificates/all', {
             params: {
                 page,
-                per_page: perPage.value
+                per_page: perPage.value,
+                search: searchTerm.value,
+                status: statusFilter.value,
+                user_type: userTypeFilter.value
             }
         });
 
@@ -325,6 +387,23 @@ const destroy = async (item) => {
 };
 
 watch(perPage, () => {
+    getCertificates(1);
+});
+
+watch(statusFilter, () => {
+    getCertificates(1);
+});
+
+watch(userTypeFilter, () => {
+    getCertificates(1);
+});
+
+watch(searchTerm, () => {
+    // Keep page index consistent while the debounced request is pending.
+    currentPage.value = 1;
+});
+
+watch(searchTermDebounced, () => {
     getCertificates(1);
 });
 

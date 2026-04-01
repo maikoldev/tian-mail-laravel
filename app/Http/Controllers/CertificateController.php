@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Image;
+use Intervention\Image\ImageManagerStatic as Image;
 use Ramsey\Uuid\Uuid;
 
 class CertificateController extends Controller
@@ -29,10 +29,38 @@ class CertificateController extends Controller
     {
         $perPage = (int) $request->input('per_page', 10);
         $perPage = max(1, min($perPage, 50));
+        $search = trim((string) $request->input('search', ''));
+        $status = trim((string) $request->input('status', ''));
+        $userType = trim((string) $request->input('user_type', ''));
 
-        $certificates = Certificate::query()
+        $certificatesQuery = Certificate::query();
+
+        if ($search !== '') {
+            $certificatesQuery->where(function ($query) use ($search) {
+                $query->where('document_number', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('lastname', 'like', "%{$search}%")
+                    ->orWhere('certificate_number', 'like', "%{$search}%");
+            });
+        }
+
+        if ($status !== '') {
+            $certificatesQuery->where('certificate_status', $status);
+        }
+
+        if ($userType !== '') {
+            $certificatesQuery->where('user_type', $userType);
+        }
+
+        $certificates = $certificatesQuery
             ->orderByDesc('id')
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->appends([
+                'search' => $search,
+                'status' => $status,
+                'user_type' => $userType,
+                'per_page' => $perPage,
+            ]);
 
         $certificates->getCollection()->transform(function ($certificate) {
             if ($certificate->certificate_status != 'Expired') {
