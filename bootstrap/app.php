@@ -22,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             TrimStrings::class,
             HandleCors::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'certificates/generate',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
